@@ -36,6 +36,7 @@ public class HomeController {
     public String index(Model model) {
 
         model.addAttribute("title", "MyJobs");
+        model.addAttribute("jobs", jobRepository.findAll());
 
         return "index";
     }
@@ -56,23 +57,23 @@ public class HomeController {
 	    model.addAttribute("title", "Add Job");
             return "add";
         }
-
-        Optional<Employer> result = employerRepository.findById(employerId);
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+        newJob.setSkills(skillObjs);
+        Optional<Employer> result = employerRepository.findById(employerId);
 
         if(result.isEmpty()){
             model.addAttribute("title", "Invalid Employer ID: " + employerId);
-
-        } else if(skillObjs.isEmpty()){
-            model.addAttribute("title", "Invalid Skill ID: " + skills);
-
-        } else {
+            return "add";
+        }  else {
             Employer employer = result.get();
             newJob.setEmployer(employer);
-            newJob.setSkills(skillObjs);
-            jobRepository.save(newJob);
         }
 
+        if(skillObjs.isEmpty()){
+            model.addAttribute("title","Invalid Skill ID:" + skills);
+            return "add";
+        }
+        jobRepository.save(newJob);
         return "redirect:";
     }
 

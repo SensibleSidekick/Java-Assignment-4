@@ -33,4 +33,8 @@ public class Employer extends AbstractEntity {
     public void setLocation(@NotBlank(message = "Location is required.") @Size(max = 50, message = "Cannot be longer than 50 characters") String location) {
         this.location = location;
     }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
 }
